@@ -30,7 +30,7 @@ const elements: Elements[] = [
       value: '/docs/intro'
     }
   },
-    {
+  {
     locator: (page: Page): Locator => page.getByRole('link', { name: 'MCP', exact: true }),
     name: 'MCP link',
     text: 'MCP',
@@ -100,56 +100,56 @@ const elements: Elements[] = [
       value: '/docs/intro'
     }
   },
-  
+
 ]
 
 const lightMode = ['light', 'dark'];
 
-test.describe('Тесты главной страницы', () =>{
-  test.beforeEach(async ({page}) => {
+test.describe('Тесты главной страницы', () => {
+  test.beforeEach(async ({ page }) => {
     await page.goto('https://playwright.dev/');
   })
   test(`Проверка отображения элементов навигации хэдера`, async ({ page }) => {
-    elements.forEach(({locator, name}) => {
+    elements.forEach(({ locator, name }) => {
       test.step(`Проверка отображения элемента ${name}`, async () => {
-      await expect(locator(page)).toBeVisible();
-    });
+        await expect(locator(page)).toBeVisible();
+      });
     })
-});
+  });
 
-test('Проверка названий элементов навигации хэдера', async ({ page }) => {
-  elements.forEach(({locator, name, text}) => {
-    if(text){
-       test.step(`Проверка названия элемента ${name}`, async () => {
-      await expect(locator(page)).toContainText(text);
+  test('Проверка названий элементов навигации хэдера', async ({ page }) => {
+    elements.forEach(({ locator, name, text }) => {
+      if (text) {
+        test.step(`Проверка названия элемента ${name}`, async () => {
+          await expect(locator(page)).toContainText(text);
+        });
+      }
+    })
+  });
+
+  test('Проверка атрибутов href элементов навигации хэдера', async ({ page }) => {
+    elements.forEach(({ locator, name, attribute }) => {
+      if (attribute) {
+        test.step(`Проверка атрибутов href элемента ${name}`, async () => {
+          await expect(locator(page)).toHaveAttribute(attribute?.type, attribute?.value);
+        });
+      }
+    })
+  });
+  test('Проверка проверка переключения темы', async ({ page }) => {
+    await page.goto('https://playwright.dev/');
+    await page.getByRole('button', { name: 'Switch between dark and light' }).click();
+    await expect.soft(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  });
+
+  lightMode.forEach((value) => {
+    test(`Проверка стилей активного ${value} мода`, async ({ page }) => {
+      await page.evaluate((value) => {
+        document.querySelector('html')?.setAttribute('data-theme', value);
+      }, value);
+      await expect(page).toHaveScreenshot(`pageWith${value}Mode.png`);
     });
-    }
-  })
-});
-
-test('Проверка атрибутов href элементов навигации хэдера', async ({ page }) => {
-  elements.forEach(({locator, name, attribute}) => {
-    if(attribute){
-       test.step(`Проверка атрибутов href элемента ${name}`, async () => {
-      await expect(locator(page)).toHaveAttribute(attribute?.type, attribute?.value);
-    });
-    }
-  })
-});
-test('Проверка проверка переключения темы', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
-  await page.getByRole('button', { name: 'Switch between dark and light' }).click();
-  await expect.soft(page.locator('html')).toHaveAttribute('data-theme', 'light');
-});
-
-lightMode.forEach((value) => {
-  test(`Проверка стилей активного ${value} мода`, async ({page}) => {
-  await page.evaluate((value) =>{
-    document.querySelector('html')?.setAttribute('data-theme', value);
-  }, value);
-  await expect(page).toHaveScreenshot(`pageWith${value}Mode.png`);
-});
-});
+  });
 });
 
 

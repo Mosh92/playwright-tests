@@ -1,25 +1,18 @@
-import { test, expect, Locator, Page } from '@playwright/test';
-import { MainPage } from '../models/MainPage';
-
-let mainPage: MainPage;
+import {test, expect } from '../fixtures/mainPage';
 
 test.describe('Тесты главной страницы', () => {
-  test.beforeEach(async ({ page }) => {
-    mainPage = new MainPage(page);
-    await mainPage.openMainPage();
-  })
-  test(`Проверка отображения элементов навигации хэдера`, async () => {
+  test(`Проверка отображения элементов навигации хэдера`, async ({ mainPage}) => {
     await mainPage.checkElementsVisability();
   });
 
-  test('Проверка названий элементов навигации хэдера', async () => {
+  test('Проверка названий элементов навигации хэдера', async ({ mainPage}) => {
     await mainPage.checkElementsText();
   });
 
-  test('Проверка атрибутов href элементов навигации хэдера', async () => {
+  test('Проверка атрибутов href элементов навигации хэдера', async ({ mainPage}) => {
     await mainPage.checkElementsHrefAttribute();
   });
-  test('Проверка проверка переключения Light Mod', async () => {
+  test('Проверка проверка переключения Light Mod', async ({ mainPage}) => {
     test.step('Нажатие на иконку переключение Light mod', async () => {
       await mainPage.clickSwitchLightModeIcon();
     });
@@ -28,7 +21,7 @@ test.describe('Тесты главной страницы', () => {
     });
   });
 
-  test(`Проверка стилей со светлой темой`, async () => {
+  test(`Проверка стилей со светлой темой`, async ({ mainPage}) => {
     await test.step('Установка светлой темы', async () => {
       await mainPage.setLightMode();
     });
@@ -36,7 +29,7 @@ test.describe('Тесты главной страницы', () => {
       await mainPage.checkLayoutWithLightMode();
     });
   });
-  test(`Проверка стилей с тёмной темой`, async () => {
+  test(`Проверка стилей с тёмной темой`, async ({ mainPage}) => {
     await test.step('Установка тёмной темы', async () => {
       await mainPage.setDarkMode();
     });
